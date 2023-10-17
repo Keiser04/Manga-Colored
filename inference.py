@@ -49,7 +49,7 @@ def parse_args():
     parser.add_argument('-g', '--gpu', dest = 'gpu', action = 'store_true')
     parser.add_argument('-nd', '--no_denoise', dest = 'denoiser', action = 'store_false')
     parser.add_argument("-ds", "--denoiser_sigma", type = int, default = 25)
-    parser.add_argument("-s", "--size", type = int, default = 1152)
+    parser.add_argument("-s", "--size", type = int, default = 2304)
     parser.set_defaults(gpu = False)
     parser.set_defaults(denoiser = True)
     args = parser.parse_args()
