@@ -48,7 +48,7 @@ def parse_args():
     parser.add_argument("-ext", "--extractor", default = 'networks/extractor.pth')
     parser.add_argument('-g', '--gpu', dest = 'gpu', action = 'store_true')
     parser.add_argument('-nd', '--no_denoise', dest = 'denoiser', action = 'store_false')
-    parser.add_argument("-ds", "--denoiser_sigma", type = int, default = 50)
+    parser.add_argument("-ds", "--denoiser_sigma", type = int, default = 15)
     parser.add_argument("-s", "--size", type = int, default = 1984)
     parser.set_defaults(gpu = True)
     parser.set_defaults(denoiser = True)
