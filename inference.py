@@ -13,15 +13,10 @@ def process_image(image, colorizator, args):
     return colorizator.colorize()
     
 def colorize_single_image(image_path, save_path, colorizator, args):
-    
-        image = plt.imread(image_path)
-
-        colorization = process_image(image, colorizator, args)
-        
-        plt.imsave(save_path, colorization)
-        
-        return True
-    
+    image = plt.imread(image_path)
+    colorization = process_image(image, colorizator, args)
+    plt.imsave(save_path, colorization)
+    return True
 
 def colorize_images(target_path, colorizator, args):
     images = os.listdir(args.path)
@@ -36,29 +31,26 @@ def colorize_images(target_path, colorizator, args):
         if (ext != '.png'):
             image_name = name + '.png'
         
-        print(file_path)
-        
         save_path = os.path.join(target_path, image_name)
         colorize_single_image(file_path, save_path, colorizator, args)
-    
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--path", required=True)
-    parser.add_argument("-gen", "--generator", default = '/content/Manga-Colored/networks/generator.zip')
-    parser.add_argument("-ext", "--extractor", default = 'networks/extractor.pth')
-    parser.add_argument('-g', '--gpu', dest = 'gpu', action = 'store_true')
-    parser.add_argument('-nd', '--no_denoise', dest = 'denoiser', action = 'store_false')
-    parser.add_argument("-ds", "--denoiser_sigma", type = int, default = 10)
-    parser.add_argument("-s", "--size", type = int, default = 512)
-    parser.set_defaults(gpu = True)
-    parser.set_defaults(denoiser = True)
+    parser.add_argument("-o", "--output", default='colorized_images')  # Argumento para la opción de salida
+    parser.add_argument("-gen", "--generator", default='/content/Manga-Colored/networks/generator.zip')
+    parser.add_argument("-ext", "--extractor", default='networks/extractor.pth')
+    parser.add_argument('-g', '--gpu', dest='gpu', action='store_true')
+    parser.add_argument('-nd', '--no_denoise', dest='denoiser', action='store_false')
+    parser.add_argument("-ds", "--denoiser_sigma", type=int, default=10)
+    parser.add_argument("-s", "--size", type=int, default=512)
+    parser.set_defaults(gpu=True)
+    parser.set_defaults(denoiser=True)
     args = parser.parse_args()
     
     return args
 
-    
 if __name__ == "__main__":
-    
     args = parse_args()
     
     if args.gpu:
@@ -69,22 +61,19 @@ if __name__ == "__main__":
     colorizer = MangaColorizator(device, args.generator, args.extractor)
     
     if os.path.isdir(args.path):
-        colorization_path = os.path.join(args.path, 'colorization')
+        colorization_path = os.path.join(args.path, args.output)  # Utiliza el argumento de salida
         if not os.path.exists(colorization_path):
             os.makedirs(colorization_path)
               
         colorize_images(colorization_path, colorizer, args)
         
     elif os.path.isfile(args.path):
-        
         split = os.path.splitext(args.path)
         
-        if split[1].lower() in ('.jpg', '.png', ',jpeg'):
-            new_image_path = split[0] + '_colorized' + '.png'
-            
+        if split[1].lower() in ('.jpg', '.png', '.jpeg'):  # Arregla la coma a un punto en '.jpeg'
+            new_image_path = os.path.join(args.output, split[0] + '_colorized.png')  # Utiliza el argumento de salida
             colorize_single_image(args.path, new_image_path, colorizer, args)
         else:
             print('Wrong format')
     else:
         print('Wrong path')
-    
