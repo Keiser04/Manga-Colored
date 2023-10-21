@@ -39,11 +39,10 @@ def colorize_images(target_path, colorizator, args):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--path", required=True)
-    parser.add_argument("-o", "--output", required=True)
     parser.add_argument("--eliminar", dest='eliminar', action='store_true', help='Eliminar imágenes en blanco y negro después de procesarlas')
     parser.add_argument("-s", "--size", type=int, default=1088)
     parser.add_argument('-nd', '--no_denoise', dest='denoiser', action='store_false')
-    parser.set_defaults(denoiser=True)
+    parser.add_argument("-o", "--output", required=True, help='Ruta de salida para las imágenes coloreadas')
     args = parser.parse_args()
     
     return args
