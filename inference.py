@@ -20,6 +20,10 @@ def colorize_single_image(image_path, output_path, colorizer, args):
     colorization = colorizer.colorize()
     plt.imsave(output_path, colorization)
 
+    # Eliminar la imagen en blanco y negro después de procesarla si la opción 'eliminar' es True
+    if args.eliminar:
+        os.remove(image_path)
+
 if __name__ == "__main__":
     args = parse_args()
 
@@ -48,10 +52,6 @@ if __name__ == "__main__":
 
             save_path = os.path.join(output_dir, image_name)
             colorize_single_image(file_path, save_path, colorizer, args)
-
-            # Eliminar la imagen en blanco y negro después de procesarla si la opción 'eliminar' es True
-            if args.eliminar:
-                os.remove(file_path)
 
         print("Procesamiento y eliminación de imágenes completados.")
     else:
