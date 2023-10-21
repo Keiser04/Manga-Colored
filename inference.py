@@ -24,6 +24,8 @@ def colorize_single_image(image_path, output_path, colorizer, args):
     if args.eliminar:
         os.remove(image_path)
 
+    print(f"Imagen coloreada guardada en: {output_path}")
+
 if __name__ == "__main__":
     args = parse_args()
 
