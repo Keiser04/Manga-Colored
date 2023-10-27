@@ -14,6 +14,17 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def colorize_images_in_directory(directory, output_dir, colorizer, args):
+    for foldername, _, filenames in os.walk(directory):
+        for filename in filenames:
+            name, ext = os.path.splitext(filename)
+            if ext.lower() not in ['.png', '.jpg', '.jpeg']:
+                continue  # Saltar archivos que no son imágenes
+
+            file_path = os.path.join(foldername, filename)
+            save_path = os.path.join(output_dir, filename)
+            colorize_single_image(file_path, save_path, colorizer, args)
+
 def colorize_single_image(image_path, output_path, colorizer, args):
     image = plt.imread(image_path)
     colorizer.set_image(image, args.size, not args.denoiser, args.size)  # No aplicamos denoise si args.denoiser es False
@@ -40,20 +51,7 @@ if __name__ == "__main__":
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        images = os.listdir(args.path)
-
-        for image_name in images:
-            file_path = os.path.join(args.path, image_name)
-
-            if os.path.isdir(file_path):
-                continue
-
-            name, ext = os.path.splitext(image_name)
-            if ext.lower() not in ['.png', '.jpg', '.jpeg']:
-                continue  # Saltar archivos que no son imágenes
-
-            save_path = os.path.join(output_dir, image_name)
-            colorize_single_image(file_path, save_path, colorizer, args)
+        colorize_images_in_directory(args.path, output_dir, colorizer, args)
 
         print("Procesamiento y eliminación de imágenes completados.")
     else:
